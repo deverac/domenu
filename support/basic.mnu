@@ -1,0 +1,45 @@
+#cascade = 2,1
+#default placement = 26,8
+;#quickselect
+#shadow
+#notime
+#header message = DoMenu
+
+#f1 = Help
+  help /odomenu.htm
+
+#f4 = Shell
+  command.com /k set prompt=$_Type 'exit' to quit.$_$P$G
+
+#f7 = Exit
+  #exit
+
+%Menu
+Dos Navigator
+  c:\fdos\dn2\dn.com
+Pakupaku (Pacman)
+  c:
+  cd \games\pakupaku
+  paku.exe
+GUI Calculator
+  c:\fdos\bin\foxcalc.exe
+System...
+  %system
+
+
+
+%System
+Edit basic.mnu
+  edit basic.mnu
+Find file
+  #ask filespec,Enter a filespec,,,8
+  search %filespec%
+  pause
+Install/Remove software
+  fdimples
+  ; Pause to allow viewing output.
+  pause
+List installed software
+  fdnpkg listlocal | pg
+Shell
+  command.com /k set prompt=$_Type 'exit' to quit.$_$P$G

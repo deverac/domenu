@@ -1,0 +1,126 @@
+#cascade = 2,1
+#default placement = 26,8
+#quickselect
+
+#f1 = Help
+  #display,,,7
+    "Help with the menu system:"
+    ""
+    "Press the number displayed before"
+    "an item to access the item."
+    ""
+    "up & down                           "
+    "arrow keys - move the selection bar "
+    "enter key  - access selected item   "
+    "escape key - move back one menu     "
+    ""
+    "left mouse button works like enter  "
+    "right mouse button works like escape"
+    ""
+    "press any key to continue"
+#f2 = Exit
+  #display,,,2
+    "Good Bye !!"
+  #exit
+
+; Key code 0,120 is Alt-1.
+#key 0,120
+  %secret menu
+
+#display,255,20,9
+  "Press Alt-1 for a 'secret' menu"
+
+#display,3,255,4   ;the 255 means to center according to hieght
+  "Password is"
+  "'domenu'"
+
+%Welcome to DoMenu !!!!
+DoMenu Variables
+  #ask string,Enter a String,,,8
+  #ask choice,Chose a Selection,,,6
+    "Choice 1" = The First Choice
+    "Choice 2" = The Second Choice
+    "And Another Choice"
+    "Choose Not to Choose" =
+  #display,,,1
+    "Your String Was:"
+    "%string%"
+  #if %choice%
+    #display,,,1
+      "Your Choice Was:"
+      "%choice%"
+  #else
+    #display,,,1
+      "You Chose Not To Chose."
+  #endif
+Password Feature
+  #password domenu
+  #display
+   "That is the Password !!!"
+Disk access features
+ %disk access menu
+Look at Color Palettes
+ #display
+  "The root menu is set"
+  "to color palette 0"
+ #display,,,1
+  "The this box is set"
+  "to color palette 1"
+ #display,,,2
+  "The this box is set"
+  "to color palette 2"
+ #display,,,3
+  "The this box is set"
+  "to color palette 3"
+ #display,,,4
+  "The this box is set"
+  "to color palette 4"
+ #display,,,5
+  "The this box is set"
+  "to color palette 5"
+ #display,,,6
+  "The this box is set"
+  "to color palette 6"
+ #display,,,7
+  "The this box is set"
+  "to color palette 7"
+ #display,,,8
+  "The this box is set"
+  "to color palette 8"
+ #display,,,9
+  "The this box is set"
+  "to color palette 9"
+DoMenu HTML reference
+  c:
+  cd \devel\domenu
+  help /odomenu.htm
+DoMenu documentation
+  c:
+  cd \devel\domenu
+  more domenu.doc
+
+%Disk Access Menu
+Find a floppy Disk
+  #floppy floppy_drive
+  #display 
+    "A floppy formatted floppy disk"
+    "was found in drive %floppy_drive%" 
+Check for free disk space
+  #display
+    "This will check to see if"
+    "there are 300 K bytes free"
+    "on a floppy disk"
+  #floppy floppy_drive
+  #space %floppy_drive% 300
+  #display
+    "There was at least 300 K"
+    " bytes free."
+
+%secret menu,,,2
+Secret option #1
+  echo It's not that secure
+  echo but it could be useful.
+  pause
+Secret option #2
+  echo Security through obscurity.
+  pause

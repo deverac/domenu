@@ -1,0 +1,670 @@
+                    DoMenu Menuing Software
+
+                          Version 1.72
+
+
+DoMenu is a patched version of DougMenu, which allows it to be compiled for
+FreeDOS. The name 'DougMenu' was changed to 'DoMenu' in order to avoid any
+confusion with the official DougMenu program and as an homage to Do(ug)Menu.
+
+See doug172.zip for original DougMenu source files and documentation.
+
+     -------------------------
+
+
+Netware and Novell are registered trademarks of Novell Inc.
+MS-DOS is a registered trademark of Microsoft Inc.
+PC is a registered trademark of International Business Machines Inc.
+
+
+     -------------------------
+
+
+WHAT IS DOMENU?
+     DoMenu is intended for use as a stand alone menuing system
+     or as a client interface for a PC network using PC
+     compatible computers.
+
+     DoMenu requires 100k of disk space, 256k free memory, and
+     MS-DOS version 3.3 compatibility.
+
+FEATURES:
+     No memory overhead when launching applications.
+     Programmable function keys and hidden 'hot' keys.
+     Reads Novell menus scripts with little or no modification.
+     Built-in screen saver that won't conflict with TSR programs.
+     Can run TSR programs.
+     Controlled exiting.
+     Security features.
+     Full mouse support.
+     User input capabilities.
+     Support for novell networks.
+     Minimal batch file litter.
+     Easily customized colors and layouts.
+     Small.
+     Fast.
+     Free!
+
+HOW IT WORKS:
+     DoMenu requires the use of 3 files:  DOMENU.EXE,
+     DMENU.BAT and a menu script.  After DoMenu is configured
+     for your system and a menu script has been created, type the
+     following to start the menu program:
+
+     [DRIVE:][PATH] DMENU DRIVE:\[PATH]\MENUSCRIPT[.MNU]
+
+     The parameter after DMENU is the path and the name of the
+     menu script.  If DoMenu cannot find your menu script, it
+     will add ".MNU" to the end of the file name and look for
+     that file. Although the .MNU extension is not required, it
+     may be helpful for organizing files.
+
+     The DMENU.BAT file runs the DoMenu executable.  The
+     executable reads in the menu script and uses the script to
+     display menus and such.  When an action is selected that
+     requires leaving the menu system, the executable makes a
+     temporary batch file according to the t environment
+     variable.  Once the file is made, DOMENU.EXE terminates
+     and returns an errorlevel to the DMENU.BAT batch file.  The
+     errorlevel determines how to use the temporary batch is
+     invoked, or if to exit without using it.  If the temporary
+     batch file is going to return to the menu program, the
+     temporary batch file is invoked with the "call" command
+     which is only found in dos 3.3 and higher to force the
+     return.
+
+
+     -------------------------
+
+
+INSTALLING DOMENU:
+
+     To install DoMenu, make a directory on a computers fixed
+     disk or on a file server and copy the files found in the
+     DoMenu distribution zip file into that directory.
+     It is permitted to install DoMenu in a minimal operational
+     configuration within a business or organization.  See the
+     beginning of this document for details.
+
+CONFIGURING DOUG MENU:
+
+     To configure DoMenu, two lines need to be edited in the file
+     named DMENU.BAT.
+          Listing of DMENU.BAT:
+               @echo off
+          *    set t=C:\temp.fil
+               :loop
+          **   C:\MENU\DOMENU.EXE %1
+               if errorlevel = 2 %t%
+               if errorlevel = 1 goto quit 
+               call %t%
+               goto loop
+               :quit
+               set t=
+
+     *    -- When DoMenu is run, it will create a small temporary
+          batch file called temp.bat.  The t environment variable
+          determines the name and path of the temporary batch file.
+          The name of the temporary file name should end ".fil" . 
+          If you want to put the temporary files on a networked
+          drive, read the section concerning network customization
+          in the Hints and Tips section.  Also, putting spaces
+          between the 't' and the '=' can cause problems with some
+          versions of DOS.  So don't use "t = c:\temp.fil", use
+          "set t=c:\temp.fil" instead.
+
+     **   -- This line should be set to the location of
+          DOMENU.EXE on your hard drive or networked drive. 
+          Optional paramters color or mono can be added after the
+          %1 to force a video mode to be selected properly.
+
+SUGGESTIONS FOR CUSTOMIZATION OF DMENU.BAT:
+     Keep in mind that DMENU.BAT is only a batch file, and can be
+     edited into many different working configurations.  Feel free
+     to add anything to it which will help your system.  But be
+     careful; it is not a good idea to place commands after the
+     domenu.exe line and before the "if errorlevel" lines because
+     this could change the errorlevel settings before the "if
+     errorlevel" statements can read it.
+
+     If you want to make sure that the user was returned to a
+     specific directory after returning from any application, a
+     change directory command can be placed after the loop label in
+     the DMENU.BAT file.
+
+     If you want to broadcast a message when the menu system is
+     first started, you can put a dos "type" command followed by a
+     "pause" command at the beginning of the DMENU.BAT file to do
+     this.
+
+
+     -------------------------
+
+
+HOW TO WRITE MENU SCRIPTS:
+
+     The basic unit of a DoMenu script is the menu structure.  It
+     is used to create menu windows when a script is splayed by
+     DoMenu.  A menu structure begins with a line whose first
+     character is '%'.  Any text after the '%' and before a comma
+     or the end of the line is used as the title of the particular
+     menu.  The following line would be used to create a menu
+     called "My First Menu".
+
+     %My First Menu
+
+     Non-indented lines which follow the menu title will be
+     displayed as visible options in the particular menu.  Indented
+     text can be placed after the option names and these lines will
+     determine what will happen if the option that they follow is
+     chosen.  The lines of indented executable text are normally
+     placed into a temporary batch file and then run.  The
+     following sample of a menu script illustrates a simple menu
+     structure complete will options and actions.
+
+     %My First Menu
+     My First Option
+       echo The first option was chosen
+       pause
+     Subtitle Option
+     Wordperfect
+       c:
+       cd wp51
+       wp.exe
+
+     Notice that the second option is not followed by any text. 
+     When this is the case, the option will not be selectable and
+     the its name will be displayed as a subtitle in the menu
+     window when it the menu structure is displayed.
+
+     When a script is started, the first menu structure in the
+     script will be automatically displayed.  To open more menu
+     structures from the first, the executable text of an option
+     should contain the name of the menu to be opened after an
+     indented '%'.  This is demonstrated below.
+
+     %The first menu
+     Launch a new menu
+       %another menu
+     Another Option
+       its executable text
+
+     %Another Menu
+     Its Items
+       Executable batch file stuff for them.
+
+     This method of opening menu windows can be recursed and/or
+     nested up to 10 levels deep.
+
+
+     -------------------------
+
+
+HINTS AND TIPS:
+
+Networking Hazards:
+     Temporary Batch files:
+          The best thing to do is put the temporary batch files on
+          local hard drives or ram drives.  If the temporary files
+          are to be placed in a common directory on a networked
+          drive, numerous temporary files can coexist if they are
+          named according to the connection number, network
+          address, or user name.  This can be done by placing the
+          distinguishing value into an environment variable, say
+          %connection%, when logging into the server and then use
+          that variable to define the temporary batch file in
+          DMENU.BAT, like this:
+
+               set temp=u:\temp\%connection%.fil 
+          
+     Logging out of a server from inside the menu:
+          If the temporary batch files are on a local drive and
+          DMENU.BAT is on a networked drive: 
+               1)   Use "#logout" followed by "#exit" or
+                    "#reboot".
+               2)   Use a batch file which logs the user out of
+                    the server, but end the option's executable
+                    text with "#exit".
+               3)   Put DMENU.BAT on some network drive that is
+                    visible when not logged into the server, such
+                    as the \LOGIN directory.
+          If both the temporary batch files and DMENU.BAT are on
+          networked drives:
+               1)   Use "#logout" followed by "#reboot".
+               2)   Put DMENU.BAT and the temporary batch file on
+                    some network drive that is visible when not
+                    logged into the server, such as the \LOGIN
+                    directory.
+
+Differences from Novell
+
+     Menu x,y positioning parameter order:
+          Novell menu orders the menu placement parameters as
+          %menu,Y,X and they are offset from the center of the
+          menu.  DoMenu uses an X,Y arrangement instead, and
+          coordinates determine the offset for the upper left
+          corner of the menus.
+     String Input
+          The Novell menu's system of string input was limited. 
+          DoMenu uses the "#ask" command.
+     !LOGOUT
+          Novell menu uses "!logout" to log a user out of the
+          server and exit the program.  It can be replaced with
+          "#logout" followed by "#exit" or "#reboot".
+
+
+
+
+     -------------------------
+
+
+POSITIONING MENUS & CHOOSING MENU COLORS.
+
+     %MenuTitle [,<x_position>,<y_position>,<palette_number>]
+
+     Parameters can be used after a menu title to change the
+     location and the color palette used when displaying a menu
+     window.  These parameters are offset from the menu title with
+     commas.  To center a menu window with respect to an axis, use
+     255 as the placement value.  DoMenu will reposition menu
+     windows so that they do not cover the header box and are not
+     off the screen.
+
+     DoMenu has 10 palettes numbered 0 through 9.  These palettes
+     can be redefined with the special external command '#palette'. 
+     Palettes 8 and 9 are used for monochrome displays.  If
+     DoMenu is run using a monochrome display, it will use these
+     two palette and ignore attempt to change the palette.
+
+ADVANCED MENU CUSTOMIZATIONS:
+
+     The following section lists the names used in the notation of
+     the command listing.
+
+<string>            a string of characters that can contain
+                    environment variables.
+<group>             a string that specifically represents a novell
+                    user group's name
+<username>          a string that specifically represents a novell
+                    user's name
+<servername/>       a novell fileserver name followed by a /
+                    character.
+<filename>          a string which is the filename of a dos text
+                    file.
+<palette_number>    a value between 0-9
+
+<foreground_color>  a number from 1 - 15 from the list below.
+<background_color>  a number from 0 - 7 from the list below.
+
+        0   -   black         8   -   dark grey
+        1   -   blue          9   -   lt. blue
+        2   -   green         10  -   lt. green
+        3   -   cyan          11  -   lt. cyan
+        4   -   red           12  -   lt. red
+        5   -   magenta       13  -   lt. magenta
+        6   -   brown         14  -   yellow
+        7   -   lt.grey       15  -   white
+
+<key_code>     a number between 0-255 which corresponds to a IBM
+               keyboard scan code.
+
+<char_code>    a number between 0-255 which corresponds to an IBM
+               screen display code.
+
+<X_Position>   a number between 0-255 which will determine the
+               horizontal position of the upper left corner of a
+               DoMenu window.  If it is 255, the window will be
+               centered.
+<X_Vector>     a number between 0-255 which will determine how far
+               a way the next default window will be located from
+               the currently opened window.
+
+
+     -------------------------
+
+
+PARSING COMMANDS:
+
+     These commands affect the way that DOMENU.EXE reads in the
+     menu script when DoMenu is used.  The action of these
+     commands depends on their placement within the script.
+
+;comments
+          Any text following after a semicolon on one line that is
+          not in quotations will be treated as a comment and
+          ignored by the parser.  This can cause trouble with the
+          dos "path" and "assign" commands.  Use the two following
+          commands as a work-around.
+#nocomments
+          Normally, any characters after a semi-colon in a line
+          will be ignored.  Once this command is parsed, semicolons
+          will be treated as normal text and not used a comments.
+#comments
+          This command restores the default behavior of semicolons.
+#if <string> [!][=] [<string>]
+     three usages:
+          #if <string> == <string>
+               The parser will continue parsing the menu script if
+               the two strings are identical after all environment
+               variables are resolved.  Otherwise all text will be
+               skipped until the corresponding #endif is found.
+          #if <string> != <string>
+               As above except the parser will continue parsing
+               only if the two string are not equal after the
+               environment variables are resolved.
+          #if <string>
+               Will continue parsing the menu script if the string
+               contains any text after all of the environment
+               variables are resolved.  Otherwise the parser will
+               skip to the corresponding #endif.
+     All of these conditions are evaluated as the script is being
+     read.  No DoMenu variables created with the #ask command can
+     be used.  "#If" statements can be nested up to 255 levels
+     deep.
+#if_member [!][servername/]<group>
+          The parser will continue parsing the menu script if the
+          computer is currently logged into a novell server as a
+          user who is a member of the specified group.  Otherwise
+          all text will be skipped until the corresponding #endif
+          is found.  An exclamation point will make the parser
+          continue only if the user is not in the group.  A
+          combination of a server name and group name can also be
+          used in this form: "servername/username".
+#if_username [!][servername/]<username>
+          The parser will continue parsing the menu script if the
+          computer is currently logged into a novell server as the
+          user whose name is specified by the username string. 
+          Otherwise all text will be skipped until the
+          corresponding #endif is found.  An exclamation point will
+          cause the parser to continue only if the user is not
+          logged in under the specified name.    A combination of
+          a server name and group name can also be used in this
+          form: "servername/username".
+#endif
+          This is used to end an #if statement.  If it is
+          unnecessary, it will be ignored.
+#else
+          If the last #if statement failed, this will allow parsing
+          to continue from this point on.  If the last #if
+          statement passed, then this will make the parser stop
+          parsing the script until the next #endif statement is
+          found.
+#include = <filename>[.mnu]
+          Causes the text of the specified file to be parsed at
+          this point as if it were part of the primary script. 
+          Once the text of the included file is parsed, the parsing
+          of the original file will continue.  This command can be
+          nested, but do not nest scripts more than five levels
+          deep.  If the file name can't be found, Domenu will
+          look for the file with a ".mnu" extension.  If the file
+          still cannot be found an error message will be generated. 
+          In order to maintain compatibility with past versions of
+          DoMenu, an '=' must be used here.
+#include_if_exist = <filename>[.mnu]
+          As above accept no error message will be generated if the
+          file cannot be found.
+#default placement = <X_Position>,<Y_Position>
+          This option sets the default placement of the upper left
+          corner of all menus parsed after this statement.  A
+          position value of 255 will cause windows to be centered
+          with respect to the corresponding axis.  Place this at
+          the top of a script to affect all menu structures.
+#default palette = <palette_number>
+          The palette number changes the default palette for any
+          menu structures parsed after this point in the script. 
+          This statement will be ignored on computers with
+          monochrome display adapters.  Place this at the top of a
+          script to affect all menu structures.
+
+
+     -------------------------
+
+
+EXTERNAL COMMANDS:
+     There are a variety of external commands which can be used to
+     customize the DoMenu environment.  The commands are called
+     external commands because they are placed outside of the
+     normal menu structures.  It is recommended that all external
+     commands be placed at the top of the script to avoid
+     confusion, although they can be placed in between menu
+     structures.
+
+#display[,<x_position>,<y_position>,<palette_number>]
+  "Text to be displayed"
+  "Text to be displayed"
+  "Text to be displayed"
+          This will display a text box on top of the backdrop but
+          behind the first menu window.  Once displayed, boxes
+          created with this command are inert.  The display box
+          will size itself according to the longest line of text. 
+          Environment variables can be in the text.  DoMenu
+          Variables cannot be used in these external structures.
+#f<number> = <string>
+          Define an action for a function key.  The number is the
+          number of the function key ( 1-10 ) and the string
+          afterwards will be its title when it is displayed on the
+          footer bar.  The footer bar is not displayed if no
+          function keys are assigned actions with this command. 
+          This command should be followed with lines of indented
+          text which will be executed if the function key is
+          pressed while the menu screen is displayed.
+#key <key_code>,[<key_code>]
+          Define an action for a key.  The key codes refer to the
+          dos key codes for the key that is to be assigned an
+          action.  If the code is 0, it should be followed by
+          another number which corresponds to an extended key code. 
+          This structure should be followed by indented text which
+          will determine the action of this hot key.
+#timer [= <minutes>]
+          Create an action that will occur should there be no user
+          input for a given amount of time while DOMENU.EXE is
+          running.  The default time is 10 minutes if no time is
+          specified in the script.  If this structure is followed
+          by lines of indented text, those lines will determine the
+          action that will be taken if there is no user input for
+          the specified amount of time while the menu is displayed. 
+          If this structure is not followed by lines of indented
+          text, DoMenu will automatically enter a screen saver
+          mode when the timer expires.  The screen will be blanked
+          and the time and date will be moved around the screen at
+          one minute intervals.
+#saver message = <string>
+          The string that is specified in this statement will
+          replace the time and date for the built in screen saver.
+#header message = <string>
+          The string in this statement will replace the DoMenu
+          version in the header box.
+#header palette = <palette_number>
+          The palette number changes the selected palette for the
+          header box.  The default header palette is 1.  This
+          statement will be ignored on computers with monochrome
+          display adapters.
+
+
+#error palette = <palette_number>
+          The palette number changes the default palette for any
+          error boxes.  The default error palette is 2.  This
+          statement will be ignored on computers with monochrome
+          display adapters.
+#message palette = <palette_number>
+          The palette number changes the default palette for
+          message boxes created by the #display command or any
+          other non-error related message boxes.  The default
+          message palette is 3.  This statement will be ignored on
+          computers with monochrome display adapters.
+#footer color = <background_color>,<foreground_color>
+          These two colors change the foreground and background of
+          the footer line at the bottom of the screen.  This footer
+          line will only be displayed if function keys are assigned
+          with the "#f<number>" commands.
+#footer highlight = <background_color>,<foreground_color>
+          These two colors define the color of an item on the
+          footer bar if it is highlighted due by the mouse cursor. 
+          This footer line will only be displayed if function keys
+          are assigned with the "#f<number>" commands.
+#shadow [= <background_color>,<foreground_color>]
+          This command will cause the active window on the screen
+          to have a shadow on the right and bottom side.  The
+          optional color parameters can be used to change the color
+          of the shadow.  The default color for the shadow is grey
+          on black.
+#backdrop color = <background_color>,<foreground_color>
+          This command can be used to change the color of the
+          backdrop characters.
+#backdrop char = <char_code>
+          This command can be used to change the character that is
+          displayed in the backdrop.  Try using a value of 1 for an
+          interesting effect.
+#backdrop file = <filename>
+          This command can be used to display an ascii or ansi text
+          file as a background.
+
+#palette <palette_number> =   
+     Menu  Text  Title  Border  Highlighted  Selected  Selected
+     BG  , FG  , FG   , FG    , Border FG  , Item BG , Item FG
+          This is used to generate custom color palettes.  The
+          seven colors are entered as numbers according to the
+          color chart.  The values must be placed on the same line
+          as the #palette statement.
+#cascade [= <X_vector>,<Y_vector>]
+          This changes the default placement to 10,5 and causes all
+          menus to be 'stair stepped' or cascaded down from that
+          location.  The x_vector and y_vector determine how far
+          each window will be offset from the previous menu window. 
+          The default vector is 4,1.  This command can be followed
+          by "#default placement" to change the default position
+          from 10,5.
+#noexit
+          Prevents exiting the menu system via the escape key.
+#quickselect
+          Causes the items in menu windows to be displayed in an
+          enumerated fashion.  The items in windows can then be
+          selected and executed by pressing the number which
+          corresponds to the item.
+#noreturn
+          Normally, after an action which requires a batch file is
+          executed, the menu script is parsed again and all windows
+          that were open when the item was executed are reopened. 
+          This command prevents the reopening of windows when the
+          computer returns to the menu program and the user is left
+          at the root menu.
+#notime
+          Prevents the time and date from being displayed in the
+          header box.  The time and date will still be used in the
+          default screen saver message.
+
+
+     -------------------------
+
+
+SPECIAL EXECUTION COMMANDS:
+     The following commands are used only within the executable
+     text of an option, and so cannot have the '#' flush against
+     the left margin but instead be indented with spaces or tabs.
+     The Point of No Return:
+          When executing an option from a DoMenu menu script,
+          there is a certain point at which the parsing of the
+          executable text changes.  At this point, DoMenu decides
+          whether or not it is necessary to make a temporary batch
+          file.  Once the parser decides to make a temporary batch
+          file, all special execution commands will be ignored and
+          dumped into the batch file as straight text except for
+          the #if commands and the #exit command.  This means that
+          you cannot execute a dos command such as "dir", and then
+          open a query box.  Once a dos command is seen, this point
+          has been reached.
+     DoMenu Variables and Environment variables:
+          These can only be used in the execution portion of a
+          script or in some special external commands.  This means
+          that you cannot use an environment variable to name a
+          menu, while you can use them for a screen saver message
+          or for a #display box.  DoMenu variables can be used
+          just like environment variables.  Place the name inside
+          '%' characters, and the value of the variable will be
+          substituted in place of the name and the encapsulating
+          '%'.  Up to 10 DoMenu variables can be assigned in the
+          course of one option's executable text.
+
+#if <string> [!][=] [<string>]
+#if_member [!][servername/]<group>
+#if_username [!][servername/]<username>
+#endif
+#else
+          All of these function work when indented in executable
+          but instead of controlling the parsing of the menu
+          script, they control what statements get executed, or
+          once the temporary batch file has begun being written,
+          they control what is written to the temporary batch file. 
+          Also, these #if statement can use DoMenu variables
+          created in the same option's indented executable text.
+#display[,<x_position>,<y_position>,<palette_number>]
+  "Text to be displayed"
+  "Text to be displayed"
+  "Text to be displayed"
+          This will display a text box when executed.  Execution
+          will pause at this point until a key is struck.  If
+          escape or the right mouse button is pressed, execution
+          will stop at this command and the user will go back to
+          the menu window.  If any other key is pressed, the
+          execution continues normally.  The window will size
+          itself according to the longest line of text.  DoMenu
+          Variables and Environment variables can be used in the
+          text.
+#ask <variable_name>,<string>,[,<x_pos>,<y_pos>,<palette_number>]
+  "regular option with string assignment"= stuff
+  "regular option with empty assignment"=
+  "a non-selectable subtitle"
+          Creates a window which resembles a menu window.  The
+          string will be the window's title.  The text in quotes
+          will be the options.  When the user chooses an option,
+          the text after the equal sign for the selected option
+          will be assigned to the DoMenu variable which is names
+          in the top line.  DoMenu variables and Environment
+          variables can be used in the title or options in the
+          query window.  Any DoMenu variables that are assigned
+          with this statement only hold their values during the
+          execution of this statement.  If a DoMenu variable is
+          assigned and then following this a new menu window is
+          opened, the value will be lost.  Up to 10 DoMenu
+          variables can be assigned in the course of one option's
+          executable text.
+#ask <variable_name>,<string>[,<x_pos>,<y_pos>,<palette_number>]
+          Creates a window which prompts the user to input a text
+          string.  The string will be the title of the window.  The
+          text received in this window will be assigned to the
+          variable name.  DoMenu variables and Environment
+          variables can be used in the title.  Any DoMenu
+          variables that are assigned with this statement only hold
+          their values during the execution of this statement.  If
+          a DoMenu variable is assigned and then following this
+          a new menu window is opened, the value will be lost.  Up
+          to 10 DoMenu variables can be assigned in the course of
+          one option's executable text.
+#floppy <variable_name>
+          Searches through all floppy drives to find one with a
+          formatted disk in it.  The drive letter with a colon will
+          by placed in the DoMenu variable.
+#space <drive> <number>
+          Checks a specified drive for a specified number of free
+          bytes in K.  So a value of 10 would mean to check for 10k
+          free.  If there is sufficient free space, the execution
+          will continue past this command.  If it is not, the user
+          is informed of the lack of drive space and returned to
+          the menu.  If there is an error accessing the drive, this
+          statement will always fail.
+#password <string>
+          The user is requested to enter a password.  If the
+          password is incorrect, the user is informed and returned
+          to the menu.  If it is correct, the execution of the item
+          continues.  Do not put in an equal sign.
+#exit
+          When this command is encountered, either the user is
+          returned to DOS, or all batch file commands before this
+          point are executed and then the user is returned to DOS.
+#logout
+          The user is logged out of all novell servers.  This will
+          not exit users from the menu.  Execution will continue
+          after this command.
+#reboot
+          This will immediately reboot the computer without
+          creating a batch file.
