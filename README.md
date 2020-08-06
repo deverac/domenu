@@ -1,16 +1,16 @@
-`domenu.exe` - A text-UI menu which supports keyboard commands and mouse.
+`DoMenu` A Text-UI menu which supports keyboard commands and mouse.
 
-`domenu.zip` is a [FreeDOS](https://www.freedos.org/) package containing `domenu.exe` (and sources).
+`domenu.zip` is a [FreeDOS](https://www.freedos.org/) package containing `DoMenu` executables (and sources).
 
 To install: `fdinst install domenu.zip`. To install with sources: `fdnpkg install-wsrc domenu.zip`
 
-Run DoMenu by executing `dmenu.bat sample.mnu` (do not run `domenu.exe` directly).
+Run DoMenu by executing `c:\devel\domenu\domenu.bat`. Alternately, add `c:\devel\domenu` to your PATH, and then run `domenu.bat`.
 
-`domenu.doc` contains the official DoMenu documentation. `domenu.htm` contains an abbreviated version of `domenu.doc`.
+`domenu.doc` contains the official DoMenu documentation. `domenu.htm` contains an abbreviated hyper-linked version of `domenu.doc`.
 
-`domenu.exe` is targeted for FreeDOS, but will run fine in [DOSBox](https://www.dosbox.com/), however, some paths in the `dmenu.bat` and `sample.mnu` will need to be updated to work correctly.
+`domenu.exe` is targeted for FreeDOS, but will run fine in [DOSBox](https://www.dosbox.com/), however, some paths in the `domenu.bat` and .MNU files will need to be updated to work correctly.
 
-DoMenu is a patched version of DougMenu, which allows it to be compiled on
+`DoMenu` is a patched version of DougMenu, which allows it to be compiled on
 FreeDOS. Novell-related features have been disabled and Ctrl-Break handling has
 been modified. The name 'DougMenu' was changed to 'DoMenu' in order to avoid any
 confusion with the official DougMenu program and as homage to Do(ug)Menu.

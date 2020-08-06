@@ -5,7 +5,9 @@
 
 DoMenu is a patched version of DougMenu, which allows it to be compiled for
 FreeDOS. The name 'DougMenu' was changed to 'DoMenu' in order to avoid any
-confusion with the official DougMenu program and as an homage to Do(ug)Menu.
+confusion with the official DougMenu program and as homage to Do(ug)Menu.
+
+Novell functionality has been removed from DoMenu.
 
 See doug172.zip for original DougMenu source files and documentation.
 
@@ -46,26 +48,26 @@ FEATURES:
      Free!
 
 HOW IT WORKS:
-     DoMenu requires the use of 3 files:  DOMENU.EXE,
-     DMENU.BAT and a menu script.  After DoMenu is configured
+     DoMenu requires the use of 3 files:  _DOMENU_.EXE,
+     DOMENU.BAT and a menu script.  After DoMenu is configured
      for your system and a menu script has been created, type the
      following to start the menu program:
 
-     [DRIVE:][PATH] DMENU DRIVE:\[PATH]\MENUSCRIPT[.MNU]
+     [DRIVE:][PATH] DOMENU DRIVE:\[PATH]\MENUSCRIPT[.MNU]
 
-     The parameter after DMENU is the path and the name of the
+     The parameter after DOMENU is the path and the name of the
      menu script.  If DoMenu cannot find your menu script, it
      will add ".MNU" to the end of the file name and look for
      that file. Although the .MNU extension is not required, it
      may be helpful for organizing files.
 
-     The DMENU.BAT file runs the DoMenu executable.  The
+     The DOMENU.BAT file runs the DoMenu executable.  The
      executable reads in the menu script and uses the script to
      display menus and such.  When an action is selected that
      requires leaving the menu system, the executable makes a
      temporary batch file according to the t environment
-     variable.  Once the file is made, DOMENU.EXE terminates
-     and returns an errorlevel to the DMENU.BAT batch file.  The
+     variable.  Once the file is made, _DOMENU_.EXE terminates
+     and returns an errorlevel to the DOMENU.BAT batch file.  The
      errorlevel determines how to use the temporary batch is
      invoked, or if to exit without using it.  If the temporary
      batch file is going to return to the menu program, the
@@ -88,53 +90,25 @@ INSTALLING DOMENU:
 
 CONFIGURING DOUG MENU:
 
-     To configure DoMenu, two lines need to be edited in the file
-     named DMENU.BAT.
-          Listing of DMENU.BAT:
-               @echo off
-          *    set t=C:\temp.fil
-               :loop
-          **   C:\MENU\DOMENU.EXE %1
-               if errorlevel = 2 %t%
-               if errorlevel = 1 goto quit 
-               call %t%
-               goto loop
-               :quit
-               set t=
+     To customize DoMenu, the DOMENU.BAT can be edited.
 
-     *    -- When DoMenu is run, it will create a small temporary
-          batch file called temp.bat.  The t environment variable
-          determines the name and path of the temporary batch file.
-          The name of the temporary file name should end ".fil" . 
-          If you want to put the temporary files on a networked
-          drive, read the section concerning network customization
-          in the Hints and Tips section.  Also, putting spaces
-          between the 't' and the '=' can cause problems with some
-          versions of DOS.  So don't use "t = c:\temp.fil", use
-          "set t=c:\temp.fil" instead.
-
-     **   -- This line should be set to the location of
-          DOMENU.EXE on your hard drive or networked drive. 
-          Optional paramters color or mono can be added after the
-          %1 to force a video mode to be selected properly.
-
-SUGGESTIONS FOR CUSTOMIZATION OF DMENU.BAT:
-     Keep in mind that DMENU.BAT is only a batch file, and can be
+SUGGESTIONS FOR CUSTOMIZATION OF DOMENU.BAT:
+     Keep in mind that DOMENU.BAT is only a batch file, and can be
      edited into many different working configurations.  Feel free
      to add anything to it which will help your system.  But be
      careful; it is not a good idea to place commands after the
-     domenu.exe line and before the "if errorlevel" lines because
+     _DOMENU_.EXE line and before the "if errorlevel" lines because
      this could change the errorlevel settings before the "if
      errorlevel" statements can read it.
 
      If you want to make sure that the user was returned to a
      specific directory after returning from any application, a
      change directory command can be placed after the loop label in
-     the DMENU.BAT file.
+     the DOMENU.BAT file.
 
      If you want to broadcast a message when the menu system is
      first started, you can put a dos "type" command followed by a
-     "pause" command at the beginning of the DMENU.BAT file to do
+     "pause" command at the beginning of the DOMENU.BAT file to do
      this.
 
 
@@ -213,25 +187,25 @@ Networking Hazards:
           distinguishing value into an environment variable, say
           %connection%, when logging into the server and then use
           that variable to define the temporary batch file in
-          DMENU.BAT, like this:
+          DOMENU.BAT, like this:
 
                set temp=u:\temp\%connection%.fil 
           
      Logging out of a server from inside the menu:
           If the temporary batch files are on a local drive and
-          DMENU.BAT is on a networked drive: 
+          DOMENU.BAT is on a networked drive: 
                1)   Use "#logout" followed by "#exit" or
                     "#reboot".
                2)   Use a batch file which logs the user out of
                     the server, but end the option's executable
                     text with "#exit".
-               3)   Put DMENU.BAT on some network drive that is
+               3)   Put DOMENU.BAT on some network drive that is
                     visible when not logged into the server, such
                     as the \LOGIN directory.
-          If both the temporary batch files and DMENU.BAT are on
+          If both the temporary batch files and DOMENU.BAT are on
           networked drives:
                1)   Use "#logout" followed by "#reboot".
-               2)   Put DMENU.BAT and the temporary batch file on
+               2)   Put DOMENU.BAT and the temporary batch file on
                     some network drive that is visible when not
                     logged into the server, such as the \LOGIN
                     directory.
@@ -283,11 +257,11 @@ ADVANCED MENU CUSTOMIZATIONS:
 
 <string>            a string of characters that can contain
                     environment variables.
-<group>             a string that specifically represents a novell
+<group>             a string that specifically represents a Novell
                     user group's name
-<username>          a string that specifically represents a novell
+<username>          a string that specifically represents a Novell
                     user's name
-<servername/>       a novell fileserver name followed by a /
+<servername/>       a Novell fileserver name followed by a /
                     character.
 <filename>          a string which is the filename of a dos text
                     file.
@@ -325,7 +299,7 @@ ADVANCED MENU CUSTOMIZATIONS:
 
 PARSING COMMANDS:
 
-     These commands affect the way that DOMENU.EXE reads in the
+     These commands affect the way that _DOMENU_.EXE reads in the
      menu script when DoMenu is used.  The action of these
      commands depends on their placement within the script.
 
@@ -457,7 +431,7 @@ EXTERNAL COMMANDS:
           will determine the action of this hot key.
 #timer [= <minutes>]
           Create an action that will occur should there be no user
-          input for a given amount of time while DOMENU.EXE is
+          input for a given amount of time while _DOMENU_.EXE is
           running.  The default time is 10 minutes if no time is
           specified in the script.  If this structure is followed
           by lines of indented text, those lines will determine the
@@ -506,7 +480,7 @@ EXTERNAL COMMANDS:
           This command will cause the active window on the screen
           to have a shadow on the right and bottom side.  The
           optional color parameters can be used to change the color
-          of the shadow.  The default color for the shadow is grey
+          of the shadow.  The default color for the shadow is gray
           on black.
 #backdrop color = <background_color>,<foreground_color>
           This command can be used to change the color of the
@@ -516,7 +490,7 @@ EXTERNAL COMMANDS:
           displayed in the backdrop.  Try using a value of 1 for an
           interesting effect.
 #backdrop file = <filename>
-          This command can be used to display an ascii or ansi text
+          This command can be used to display an ASCII or ANSI text
           file as a background.
 
 #palette <palette_number> =   
@@ -662,7 +636,7 @@ SPECIAL EXECUTION COMMANDS:
           returned to DOS, or all batch file commands before this
           point are executed and then the user is returned to DOS.
 #logout
-          The user is logged out of all novell servers.  This will
+          The user is logged out of all Novell servers.  This will
           not exit users from the menu.  Execution will continue
           after this command.
 #reboot

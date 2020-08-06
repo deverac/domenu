@@ -7,7 +7,7 @@ if "%1" == "pkg"    goto %1
 echo.
 echo   Targets:
 echo      clean    Clean generated files
-echo      domenu   Build domenu.exe
+echo      domenu   Build _domenu_.exe
 echo      pkg      Build FreeDOS package
 echo.
 goto end
@@ -43,7 +43,7 @@ goto end
 
     cd menu\src
     find NUL NUL > NUL               ; Set errorlevel to 1
-    wcl dougmenu.c /fe=..\..\gen\domenu.exe
+    wcl dougmenu.c /fe=..\..\gen\_domenu_.exe
     if errorlevel 1 goto errbuild
     cd ..\..
 
@@ -68,7 +68,7 @@ goto end
     set LSM=%PKG%\appinfo\%NAM%.lsm
     echo Begin3> %LSM%
     echo Title:          %NAM%>> %LSM%
-    echo Version:        1.72>> %LSM%
+    echo Version:        0.1>> %LSM%
     echo Entered-date:   2020-07-21>> %LSM%
     echo Description:    A text-UI menu.>> %LSM%
     echo Keywords:       freedos %NAM%>> %LSM%
@@ -95,8 +95,8 @@ goto end
 
 
     mkdir %PKG%\%GRP%\%NAM%
-    copy .\gen\%NAM%.exe %PKG%\%GRP%\%NAM%
-    if not exist %PKG%\%GRP%\%NAM%\%NAM%.exe goto err3pkg
+    copy .\gen\_domenu_.exe %PKG%\%GRP%\%NAM%
+    if not exist %PKG%\%GRP%\%NAM%\_domenu_.exe goto err3pkg
 
     copy .\domenu.htm %PKG%\%GRP%\%NAM%
     if not exist %PKG%\%GRP%\%NAM%\domenu.htm goto err3pkg
@@ -104,8 +104,8 @@ goto end
     copy .\basic.mnu %PKG%\%GRP%\%NAM%
     if not exist %PKG%\%GRP%\%NAM%\basic.mnu goto err3pkg
 
-    copy .\menu\bin\dmenu.bat %PKG%\%GRP%\%NAM%
-    if not exist %PKG%\%GRP%\%NAM%\dmenu.bat goto err3pkg
+    copy .\menu\bin\domenu.bat %PKG%\%GRP%\%NAM%
+    if not exist %PKG%\%GRP%\%NAM%\domenu.bat goto err3pkg
 
     copy .\menu\bin\dougmenu.doc %PKG%\%GRP%\%NAM%\domenu.doc
     if not exist %PKG%\%GRP%\%NAM%\domenu.doc goto err3pkg
@@ -114,7 +114,8 @@ goto end
     if not exist %PKG%\%GRP%\%NAM%\sample.mnu goto err3pkg
 
     rem Do NOT create 'links'. Doing so will cause FreeDOS to create
-    rem \FDOS\LINKS\DOMENU.COM which intereferes with DOMENU.EXE.
+    rem \FDOS\LINKS\DOMENU.COM which will attempt to execute the _domenu_.exe
+    rem executable, however _domenu_.exe should be run from a .BAT file.
 
     cd .\%PKG%
     rem  -9  Max compression

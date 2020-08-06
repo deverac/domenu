@@ -16,15 +16,21 @@
     </p>
 
     <p>
-        DoMenu requires the use of 3 files: DOMENU.EXE, DMENU.BAT and a
+        DoMenu requires the use of 3 files: _DOMENU_.EXE, DOMENU.BAT and a
         menu script. DoMenu is started with the following command:
     </p>
-    <code>DMENU MENUSCRIPT[.MNU]</code>
+    <code>DOMENU MENUSCRIPT[.MNU]</code>
     <p>
-        DMENU.BAT may be edited to fit your needs, however the <i>t</i>
+        DOMENU.BAT may be edited to fit your needs, however the <i>t</i>
         environment variable is required and must point to a temporary file.
         The temporary file must have a three-letter extension that does not end
         with the letter 'T'.
+    </p>
+
+    <p>
+        If MENUSCRIPT is not provided, a default menu named BASIC.MNU will
+        be used. If desired, the name and location of BASIC.MNU can be edited
+        to suit your needs by editing DOMENU.BAT.
     </p>
 
     <p>

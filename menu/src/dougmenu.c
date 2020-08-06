@@ -1,12 +1,11 @@
 /***************************************************************************/
-/*                Dougmenu for DOS  Feb 11, 1994                           */
+/*                             Domenu for DOS                              */
 /*                                                                         */
-/*        This code can be compiled using Borland C++ 3.1                  */
-/*          and the netware client API for C kit                           */
+/*        This code can be compiled using Open Watcom C compiler v1.9      */
 /*        A list of all the routines grouped by module can be found        */
 /*                         in dougmenu.h                                   */
 /***************************************************************************/
-#define VERSION_STRING   "DoMenu v1.72"
+#define VERSION_STRING   "DoMenu v0.1"
 
 #include <stdio.h>
 #include <conio.h>
@@ -281,7 +280,7 @@ char *argv[];
 
 	Break_Off();
 	if ( argc < 2 ){
-		fputs("Domenu.exe should be called from inside DMENU.BAT\n",stderr);
+		fputs("_domenu_.exe should be called from inside DOMENU.BAT\n",stderr);
 		exit(LEAVE_MENU);
 	}
 		// Clear Keyboard Buffer
